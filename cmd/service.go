@@ -17,14 +17,43 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
 
-// serviceCmd represents the service command
+type Service struct {
+	metadata Metadata 
+}
+
+type Metadata struct {
+	name    string
+	labels  [1]Entry
+}
+
+type Entry struct {
+	key	    string
+	value   string
+}
+
+type Spec struct {
+    ports       [1]Port
+    selector    Selector
+}
+
+type Selector struct {
+    app string
+}
+
+type Port struct {
+    port int
+    name string
+}
+
+
 var serviceCmd = &cobra.Command{
-	Use:   "service",
-	Short: "A brief description of your command",
+	Use:   "service [create || delete] <name>",
+	Short: "",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -36,8 +65,58 @@ to quickly create a Cobra application.`,
 	},
 }
 
+var createCmd = &cobra.Command{
+    Use:   "create --name [string]",
+    Short: "Create the service",
+    Long: `Create the service`,
+    Args: cobra.MinimumNArgs(1),
+    PersistentPreRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PersistentPreRun with args: %v\n", args)
+    },
+    PreRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PreRun with args: %v\n", args)
+    },
+    Run: func(cmd *cobra.Command, args []string) {
+      fmt.Println("Print: " + strings.Join(args, " "))
+    },
+    PostRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PostRun with args: %v\n", args)
+    },
+    PersistentPostRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PersistentPostRun with args: %v\n", args)
+    },
+}
+
+var deleteCmd = &cobra.Command{
+    Use:   "delete --name [string]",
+    Short: "Delete the service",
+    Long: `Delete the service`,
+    Args: cobra.MinimumNArgs(1),
+    PersistentPreRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PersistentPreRun with args: %v\n", args)
+    },
+    PreRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PreRun with args: %v\n", args)
+    },
+    Run: func(cmd *cobra.Command, args []string) {
+      fmt.Println("Print: " + strings.Join(args, " "))
+    },
+    PostRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PostRun with args: %v\n", args)
+    },
+    PersistentPostRun: func(cmd *cobra.Command, args []string) {
+      fmt.Printf("Inside rootCmd PersistentPostRun with args: %v\n", args)
+    },
+}
+
+var Create string
+var Delete string
+
 func init() {
 	rootCmd.AddCommand(serviceCmd)
+    serviceCmd.Flags().StringVarP(&Create, "create", "c", "", "Create service")
+    serviceCmd.Flags().StringVarP(&Delete, "delete", "d", "", "Delete service")
+
 
 	// Here you will define your flags and configuration settings.
 
