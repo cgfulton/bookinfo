@@ -1,4 +1,4 @@
-module github.com/cgfulton/bookinfo
+module github.com/cgfulton/bookinfo-promt
 
 go 1.13
 
