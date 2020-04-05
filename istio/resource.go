@@ -27,7 +27,6 @@ func init() {
 	endpointList = new(sync.Map)
 	deploymentList = new(sync.Map)
 	daemonSetList = new(sync.Map)
-	eventList = new(sync.Map)
 	secretList = new(sync.Map)
 	ingressList = new(sync.Map)
 	limitRangeList = new(sync.Map)
@@ -416,25 +415,6 @@ func fetchEvents(client *kubernetes.Clientset, namespace string) {
 	eventList.Store(namespace, l)
 	return
 }
-
-//func getEventsSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
-//	go fetchEvents(client, namespace)
-//	x, ok := eventList.Load(namespace)
-//	if !ok {
-//		return []prompt.Suggest{}
-//	}
-//	l, ok := x.(*corev1.EventList)
-//	if !ok || len(l.Items) == 0 {
-//		return []prompt.Suggest{}
-//	}
-//	s := make([]prompt.Suggest, len(l.Items))
-//	for i := range l.Items {
-//		s[i] = prompt.Suggest{
-//			Text: l.Items[i].Name,
-//		}
-//	}
-//	return s
-//}
 
 /* Node */
 
