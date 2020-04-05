@@ -46,6 +46,10 @@ func writeWithSync(calldepth int, msg string) {
 	_ = logfile.Sync() // immediately write msg
 }
 
+func LogError(msg string, err error) {
+	Log(msg + " " + err.Error())
+}
+
 // Log to output message
 func Log(msg string) {
 	calldepth := 2
