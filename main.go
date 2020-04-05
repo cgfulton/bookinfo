@@ -4,31 +4,39 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/c-bata/go-prompt"
-	"github.com/cgfulton/bookinfo-prompt/internal/debug"
-	"github.com/cgfulton/bookinfo-prompt/istio"
+	prompt "github.com/c-bata/go-prompt"
+	"github.com/c-bata/go-prompt/completer"
+	"github.com/cgfulton/istio-prompt/internal/debug"
+	"github.com/cgfulton/istio-prompt/istio"
+
+	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/oidc"
+	_ "k8s.io/client-go/plugin/pkg/client/auth/openstack"
+)
+
+var (
+	version  string
+	revision string
 )
 
 func main() {
-	if c, err := istio.NewCompleter(); err != nil {
-		debug.LogError("Completer error", err)
-		os.Exit(0)
-	} else {
-		cmd := getNamespace(c)
-		fmt.Println("-------")
-		fmt.Println("Executing: " + cmd)
-		fmt.Println("-------")
-		cmd = "kubectl apply -f samples/bookinfo/platform/kube/bookinfo.yaml"
-		fmt.Println("Executing: " + cmd)
-		fmt.Println("-------")
+	c, err := istio.NewCompleter()
+	if err != nil {
+		fmt.Println("error", err)
+		os.Exit(1)
 	}
-}
 
-func getNamespace(c *istio.Completer) string {
-	fmt.Println("Select the namespace to host your application")
-	if ns := prompt.Input("> ", c.Complete); ns != "" {
-		fmt.Println("You selected namespace: " + ns)
-		return fmt.Sprintf("kubectl label namespace %s istio-injection=enabled", ns)
-	}
-	return getNamespace(c)
+	defer debug.Teardown()
+	fmt.Printf("istio-prompt %s (rev-%s)\n", version, revision)
+	fmt.Println("Please use `exit` or `Ctrl-D` to exit this program.")
+	defer fmt.Println("Bye!")
+	p := prompt.New(
+		istio.Executor,
+		c.Complete,
+		prompt.OptionTitle("istio-prompt: interactive kubernetes client"),
+		prompt.OptionPrefix(">>> "),
+		prompt.OptionInputTextColor(prompt.Yellow),
+		prompt.OptionCompletionWordSeparator(completer.FilePathCompletionSeparator),
+	)
+	p.Run()
 }

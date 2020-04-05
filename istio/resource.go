@@ -295,14 +295,12 @@ var (
 
 func fetchDaemonSetList(client *kubernetes.Clientset, namespace string) {
 	key := "daemon_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.AppsV1().DaemonSets(namespace).List(metav1.ListOptions{})
-	daemonSetList.Store(namespace, l)
-	return
+		l, _ := client.AppsV1().DaemonSets(namespace).List(metav1.ListOptions{})
+		daemonSetList.Store(namespace, l)
+	}
 }
 
 func getDaemonSetSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -332,14 +330,12 @@ var (
 
 func fetchDeployments(client *kubernetes.Clientset, namespace string) {
 	key := "deployment_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.AppsV1().Deployments(namespace).List(metav1.ListOptions{})
-	deploymentList.Store(namespace, l)
-	return
+		l, _ := client.AppsV1().Deployments(namespace).List(metav1.ListOptions{})
+		deploymentList.Store(namespace, l)
+	}
 }
 
 func getDeploymentSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -369,14 +365,12 @@ var (
 
 func fetchEndpoints(client *kubernetes.Clientset, namespace string) {
 	key := "endpoint_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().Endpoints(namespace).List(metav1.ListOptions{})
-	endpointList.Store(key, l)
-	return
+		l, _ := client.CoreV1().Endpoints(namespace).List(metav1.ListOptions{})
+		endpointList.Store(key, l)
+	}
 }
 
 func getEndpointsSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -398,24 +392,6 @@ func getEndpointsSuggestions(client *kubernetes.Clientset, namespace string) []p
 	return s
 }
 
-/* Events */
-
-var (
-	eventList *sync.Map
-)
-
-func fetchEvents(client *kubernetes.Clientset, namespace string) {
-	key := "event_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
-
-	l, _ := client.CoreV1().Events(namespace).List(metav1.ListOptions{})
-	eventList.Store(namespace, l)
-	return
-}
-
 /* Node */
 
 var (
@@ -424,14 +400,12 @@ var (
 
 func fetchNodeList(client *kubernetes.Clientset) {
 	key := "node"
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().Nodes().List(metav1.ListOptions{})
-	nodeList.Store(l)
-	return
+		l, _ := client.CoreV1().Nodes().List(metav1.ListOptions{})
+		nodeList.Store(l)
+	}
 }
 
 func getNodeSuggestions(client *kubernetes.Clientset) []prompt.Suggest {
@@ -457,14 +431,12 @@ var (
 
 func fetchSecretList(client *kubernetes.Clientset, namespace string) {
 	key := "secret_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().Secrets(namespace).List(metav1.ListOptions{})
-	secretList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().Secrets(namespace).List(metav1.ListOptions{})
+		secretList.Store(namespace, l)
+	}
 }
 
 func getSecretSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -535,14 +507,12 @@ var (
 
 func fetchLimitRangeList(client *kubernetes.Clientset, namespace string) {
 	key := "limit_range_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().LimitRanges(namespace).List(metav1.ListOptions{})
-	limitRangeList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().LimitRanges(namespace).List(metav1.ListOptions{})
+		limitRangeList.Store(namespace, l)
+	}
 }
 
 func getLimitRangeSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -587,14 +557,12 @@ var (
 
 func fetchPersistentVolumeClaimsList(client *kubernetes.Clientset, namespace string) {
 	key := "persistent_volume_claims" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().PersistentVolumeClaims(namespace).List(metav1.ListOptions{})
-	persistentVolumeClaimsList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().PersistentVolumeClaims(namespace).List(metav1.ListOptions{})
+		persistentVolumeClaimsList.Store(namespace, l)
+	}
 }
 
 func getPersistentVolumeClaimSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -624,14 +592,12 @@ var (
 
 func fetchPersistentVolumeList(client *kubernetes.Clientset) {
 	key := "persistent_volume"
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().PersistentVolumes().List(metav1.ListOptions{})
-	persistentVolumesList.Store(l)
-	return
+		l, _ := client.CoreV1().PersistentVolumes().List(metav1.ListOptions{})
+		persistentVolumesList.Store(l)
+	}
 }
 
 func getPersistentVolumeSuggestions(client *kubernetes.Clientset) []prompt.Suggest {
@@ -657,14 +623,12 @@ var (
 
 func fetchPodSecurityPolicyList(client *kubernetes.Clientset) {
 	key := "pod_security_policy"
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.ExtensionsV1beta1().PodSecurityPolicies().List(metav1.ListOptions{})
-	podSecurityPolicyList.Store(l)
-	return
+		l, _ := client.ExtensionsV1beta1().PodSecurityPolicies().List(metav1.ListOptions{})
+		podSecurityPolicyList.Store(l)
+	}
 }
 
 func getPodSecurityPolicySuggestions(client *kubernetes.Clientset) []prompt.Suggest {
@@ -690,14 +654,12 @@ var (
 
 func fetchPodTemplateList(client *kubernetes.Clientset, namespace string) {
 	key := "pod_template_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().PodTemplates(namespace).List(metav1.ListOptions{})
-	podTemplateList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().PodTemplates(namespace).List(metav1.ListOptions{})
+		podTemplateList.Store(namespace, l)
+	}
 }
 
 func getPodTemplateSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -727,14 +689,12 @@ var (
 
 func fetchReplicaSetList(client *kubernetes.Clientset, namespace string) {
 	key := "replica_set_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.AppsV1beta2().ReplicaSets(namespace).List(metav1.ListOptions{})
-	replicaSetList.Store(namespace, l)
-	return
+		l, _ := client.AppsV1beta2().ReplicaSets(namespace).List(metav1.ListOptions{})
+		replicaSetList.Store(namespace, l)
+	}
 }
 
 func getReplicaSetSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -764,14 +724,12 @@ var (
 
 func fetchReplicationControllerList(client *kubernetes.Clientset, namespace string) {
 	key := "replication_controller" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().ReplicationControllers(namespace).List(metav1.ListOptions{})
-	replicationControllerList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().ReplicationControllers(namespace).List(metav1.ListOptions{})
+		replicationControllerList.Store(namespace, l)
+	}
 }
 
 func getReplicationControllerSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -801,14 +759,12 @@ var (
 
 func fetchResourceQuotaList(client *kubernetes.Clientset, namespace string) {
 	key := "resource_quota" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().ResourceQuotas(namespace).List(metav1.ListOptions{})
-	resourceQuotaList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().ResourceQuotas(namespace).List(metav1.ListOptions{})
+		resourceQuotaList.Store(namespace, l)
+	}
 }
 
 func getResourceQuotasSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -838,14 +794,12 @@ var (
 
 func fetchServiceAccountList(client *kubernetes.Clientset, namespace string) {
 	key := "service_account_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().ServiceAccounts(namespace).List(metav1.ListOptions{})
-	serviceAccountList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().ServiceAccounts(namespace).List(metav1.ListOptions{})
+		serviceAccountList.Store(namespace, l)
+	}
 }
 
 func getServiceAccountSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -875,14 +829,12 @@ var (
 
 func fetchServiceList(client *kubernetes.Clientset, namespace string) {
 	key := "service_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.CoreV1().Services(namespace).List(metav1.ListOptions{})
-	serviceList.Store(namespace, l)
-	return
+		l, _ := client.CoreV1().Services(namespace).List(metav1.ListOptions{})
+		serviceList.Store(namespace, l)
+	}
 }
 
 func getServiceSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {
@@ -912,13 +864,12 @@ var (
 
 func fetchJobs(client *kubernetes.Clientset, namespace string) {
 	key := "job_" + namespace
-	if !shouldFetch(key) {
-		return
-	}
-	updateLastFetchedAt(key)
+	if shouldFetch(key) {
+		updateLastFetchedAt(key)
 
-	l, _ := client.BatchV1().Jobs(namespace).List(metav1.ListOptions{})
-	jobList.Store(namespace, l)
+		l, _ := client.BatchV1().Jobs(namespace).List(metav1.ListOptions{})
+		jobList.Store(namespace, l)
+	}
 }
 
 func getJobSuggestions(client *kubernetes.Clientset, namespace string) []prompt.Suggest {

@@ -7,11 +7,26 @@ import (
 	"os/exec"
 	"strings"
 
-	"github.com/cgfulton/bookinfo-prompt/internal/debug"
+	"github.com/cgfulton/istio-prompt/internal/debug"
 )
 
 func Executor(s string) {
-	ExecuteAndGetResult(s)
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return
+	} else if s == "quit" || s == "exit" {
+		fmt.Println("Bye!")
+		os.Exit(0)
+		return
+	}
+
+	cmd := exec.Command("/bin/sh", "-c", "kubectl "+s)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Got error: %s\n", err.Error())
+	}
 }
 
 func ExecuteAndGetResult(s string) string {
@@ -19,13 +34,10 @@ func ExecuteAndGetResult(s string) string {
 	if s == "" {
 		debug.Log("you need to pass the something arguments")
 		return ""
-	} else if s == "quit" || s == "exit" {
-		fmt.Println("Bye!")
-		os.Exit(0)
 	}
 
 	out := &bytes.Buffer{}
-	cmd := exec.Command("/bin/sh", "-c", s)
+	cmd := exec.Command("/bin/sh", "-c", "kubectl "+s)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = out
 	if err := cmd.Run(); err != nil {
